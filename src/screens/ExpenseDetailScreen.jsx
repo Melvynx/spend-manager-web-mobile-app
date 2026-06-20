@@ -24,7 +24,7 @@ export default function ExpenseDetailScreen({ id, onClose }) {
   const { dragHandleProps, isDragging, sheetStyle } = useDragToClose(onClose)
   const [editing, setEditing] = useState(false)
 
-  // La dépense a pu être supprimée
+  // The expense may have been deleted
   if (!expense) {
     return (
       <div
@@ -36,7 +36,7 @@ export default function ExpenseDetailScreen({ id, onClose }) {
           type="button"
           onClick={onClose}
           className="absolute inset-0 bg-gray-950/20 backdrop-blur-[10px] animate-fade-in dark:bg-black/50"
-          aria-label="Fermer"
+          aria-label="Close"
         />
         <section
           className={`relative z-10 w-full min-w-0 max-w-full rounded-t-3xl bg-white px-5 pb-[calc(1.25rem+env(safe-area-inset-bottom))] pt-3 text-center shadow-[0_-8px_24px_rgba(15,23,42,0.14)] animate-sheet-up dark:bg-gray-900 ${
@@ -50,13 +50,13 @@ export default function ExpenseDetailScreen({ id, onClose }) {
           >
             <span className="h-1.5 w-11 rounded-full bg-gray-300/90 dark:bg-gray-600" />
           </div>
-          <p className="font-semibold text-gray-900 dark:text-gray-50">Dépense introuvable</p>
+          <p className="font-semibold text-gray-900 dark:text-gray-50">Expense not found</p>
           <button
             type="button"
             onClick={onClose}
             className="mt-4 w-full rounded-2xl bg-indigo-600 py-3 font-semibold text-white active:scale-[0.985] transition"
           >
-            Fermer
+            Close
           </button>
         </section>
       </div>
@@ -71,7 +71,7 @@ export default function ExpenseDetailScreen({ id, onClose }) {
   }
 
   function handleDelete() {
-    const ok = window.confirm('Supprimer cette dépense ? Cette action est irréversible.')
+    const ok = window.confirm('Delete this expense? This action cannot be undone.')
     if (ok) {
       removeExpense(expense.id)
       onClose()
@@ -89,7 +89,7 @@ export default function ExpenseDetailScreen({ id, onClose }) {
         type="button"
         onClick={onClose}
         className="absolute inset-0 bg-gray-950/20 backdrop-blur-[10px] animate-fade-in dark:bg-black/50"
-        aria-label="Fermer"
+        aria-label="Close"
       />
 
       <section
@@ -113,14 +113,14 @@ export default function ExpenseDetailScreen({ id, onClose }) {
                   onClick={() => setEditing(false)}
                   className="h-10 rounded-full px-1 text-[15px] font-semibold text-indigo-600 active:scale-95 transition dark:text-indigo-400"
                 >
-                  Annuler
+                  Cancel
                 </button>
               ) : (
                 <button
                   type="button"
                   onClick={() => setEditing(true)}
                   className="flex h-10 w-10 items-center justify-center rounded-full bg-gray-100 text-indigo-600 active:scale-95 transition dark:bg-gray-800 dark:text-indigo-400"
-                  aria-label="Modifier"
+                  aria-label="Edit"
                 >
                   <Pencil size={18} />
                 </button>
@@ -131,7 +131,7 @@ export default function ExpenseDetailScreen({ id, onClose }) {
               id="expense-detail-title"
               className="min-w-0 max-w-[calc(100%-8rem)] truncate text-center text-[17px] font-semibold text-gray-950 dark:text-gray-50"
             >
-              {editing ? 'Modifier' : 'Détail'}
+              {editing ? 'Edit' : 'Details'}
             </h2>
 
             <div className="flex w-16 min-w-0 justify-end">
@@ -139,7 +139,7 @@ export default function ExpenseDetailScreen({ id, onClose }) {
                 type="button"
                 onClick={onClose}
                 className="flex h-10 w-10 items-center justify-center rounded-full bg-gray-100 text-gray-500 active:scale-95 transition dark:bg-gray-800 dark:text-gray-400"
-                aria-label="Fermer"
+                aria-label="Close"
               >
                 <X size={20} />
               </button>
@@ -155,14 +155,14 @@ export default function ExpenseDetailScreen({ id, onClose }) {
               initial={expense}
               categories={settings.categories}
               onSubmit={handleSave}
-              submitLabel="Enregistrer les modifications"
+              submitLabel="Save changes"
             />
           ) : (
             <>
               {imageUrl && (
                 <img
                   src={imageUrl}
-                  alt="Ticket"
+                  alt="Receipt"
                   className="mb-4 max-h-72 w-full rounded-2xl bg-white object-contain shadow-sm"
                 />
               )}
@@ -177,31 +177,31 @@ export default function ExpenseDetailScreen({ id, onClose }) {
                 <p className="mt-3 break-words text-3xl font-bold leading-tight text-gray-900 dark:text-gray-50">
                   {formatMoney(expense.amount, expense.currency)}
                 </p>
-                <p className="break-words text-gray-500 dark:text-gray-400">{expense.shop || 'Sans nom'}</p>
+                <p className="break-words text-gray-500 dark:text-gray-400">{expense.shop || 'Unnamed'}</p>
               </div>
 
               <div className="rounded-2xl bg-white px-4 shadow-sm divide-y divide-gray-100 dark:bg-gray-900 dark:divide-gray-800">
                 <Row label="Date" value={formatDate(expense.date)} />
-                <Row label="Magasin" value={expense.shop} />
-                <Row label="Catégorie" value={expense.category} />
+                <Row label="Store" value={expense.shop} />
+                <Row label="Category" value={expense.category} />
                 <Row
-                  label="Montant"
+                  label="Amount"
                   value={formatMoney(expense.amount, expense.currency)}
                 />
-                <Row label="Devise" value={expense.currency} />
+                <Row label="Currency" value={expense.currency} />
                 <Row
-                  label="TVA"
-                  value={expense.vatRate ? `${expense.vatRate} %` : null}
+                  label="VAT"
+                  value={expense.vatRate ? `${expense.vatRate}%` : null}
                 />
                 <Row
-                  label="Montant TVA"
+                  label="VAT amount"
                   value={
                     expense.vatAmount
                       ? formatMoney(expense.vatAmount, expense.currency)
                       : null
                   }
                 />
-                <Row label="Paiement" value={expense.paymentMethod} />
+                <Row label="Payment" value={expense.paymentMethod} />
                 <Row label="Note" value={expense.note} />
               </div>
 
@@ -211,7 +211,7 @@ export default function ExpenseDetailScreen({ id, onClose }) {
                 className="mt-5 flex w-full items-center justify-center gap-2 rounded-xl border border-red-200 bg-red-50 py-3 font-semibold text-red-600 active:scale-[0.98] transition dark:border-red-900 dark:bg-red-950/30 dark:text-red-400"
               >
                 <Trash2 size={18} />
-                Supprimer la dépense
+                Delete expense
               </button>
             </>
           )}
