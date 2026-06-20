@@ -8,7 +8,7 @@ import ExpenseDetailScreen from './screens/ExpenseDetailScreen.jsx'
 
 export default function App() {
   const [tab, setTab] = useState('expenses')
-  // overlay : null | { type: 'add' } | { type: 'detail', id }
+  // overlay: null | { type: 'add' } | { type: 'detail', id }
   const [overlay, setOverlay] = useState(null)
 
   return (
