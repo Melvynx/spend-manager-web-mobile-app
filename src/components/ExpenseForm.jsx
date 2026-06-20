@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { categoryMeta } from '../lib/categories.js'
 
 const COMMON_CURRENCIES = ['EUR', 'USD', 'GBP', 'CHF', 'CAD', 'JPY']
-const PAYMENT_METHODS = ['Carte', 'Espèces', 'Autre']
+const PAYMENT_METHODS = ['Card', 'Cash', 'Other']
 
 const inputClass =
   'w-full min-w-0 max-w-full rounded-xl border border-gray-200 bg-white px-3.5 py-2.5 text-[15px] text-gray-900 outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 transition dark:border-gray-700 dark:bg-gray-800 dark:text-gray-50 dark:focus:border-indigo-400 dark:focus:ring-indigo-900/40'
@@ -18,7 +18,7 @@ function Field({ label, children }) {
   )
 }
 
-// `initial` utilise les clés d'une dépense : shop, date, amount, currency,
+// `initial` uses the keys of an expense: shop, date, amount, currency,
 // vatRate, vatAmount, category, paymentMethod, note.
 export default function ExpenseForm({
   initial,
@@ -26,7 +26,7 @@ export default function ExpenseForm({
   onSubmit,
   onCancel,
   isSubmitting = false,
-  submitLabel = 'Enregistrer',
+  submitLabel = 'Save',
 }) {
   const [shop, setShop] = useState(initial.shop || '')
   const [date, setDate] = useState(initial.date || '')
@@ -35,7 +35,7 @@ export default function ExpenseForm({
   )
   const [currency, setCurrency] = useState(initial.currency || 'EUR')
   const [category, setCategory] = useState(
-    initial.category || categories[0] || 'Divers'
+    initial.category || categories[0] || 'Other'
   )
   const [vatRate, setVatRate] = useState(
     initial.vatRate != null && initial.vatRate !== '' ? String(initial.vatRate) : ''
@@ -49,7 +49,7 @@ export default function ExpenseForm({
   const [note, setNote] = useState(initial.note || '')
   const [error, setError] = useState('')
 
-  // La catégorie détectée par l'IA peut ne plus être dans la liste : on l'ajoute.
+  // The category detected by the AI may no longer be in the list: add it.
   const categoryOptions = categories.includes(category)
     ? categories
     : [category, ...categories]
@@ -60,7 +60,7 @@ export default function ExpenseForm({
 
     const amountNum = parseFloat(String(amount).replace(',', '.'))
     if (!amountNum || amountNum <= 0) {
-      setError('Indique un montant valide (supérieur à 0).')
+      setError('Enter a valid amount (greater than 0).')
       return
     }
     onSubmit({
@@ -79,16 +79,16 @@ export default function ExpenseForm({
 
   return (
     <form onSubmit={handleSubmit} className="min-w-0 max-w-full flex flex-col gap-4">
-      <Field label="Magasin / commerçant">
+      <Field label="Store / merchant">
         <input
           className={inputClass}
           value={shop}
           onChange={(e) => setShop(e.target.value)}
-          placeholder="Ex: Boulangerie Paul"
+          placeholder="e.g. Paul's Bakery"
         />
       </Field>
 
-      <Field label="Date de la dépense">
+      <Field label="Expense date">
         <input
           type="date"
           className={inputClass}
@@ -98,7 +98,7 @@ export default function ExpenseForm({
       </Field>
 
       <div className="grid grid-cols-1 gap-3 min-[360px]:grid-cols-2">
-        <Field label="Montant (TTC)">
+        <Field label="Amount (incl. tax)">
           <input
             type="number"
             inputMode="decimal"
@@ -110,7 +110,7 @@ export default function ExpenseForm({
             placeholder="0.00"
           />
         </Field>
-        <Field label="Devise">
+        <Field label="Currency">
           <input
             className={inputClass}
             value={currency}
@@ -126,7 +126,7 @@ export default function ExpenseForm({
         </Field>
       </div>
 
-      <Field label="Catégorie">
+      <Field label="Category">
         <select
           className={inputClass}
           value={category}
@@ -141,7 +141,7 @@ export default function ExpenseForm({
       </Field>
 
       <div className="grid grid-cols-1 gap-3 min-[360px]:grid-cols-2">
-        <Field label="TVA (%)">
+        <Field label="VAT (%)">
           <input
             type="number"
             inputMode="decimal"
@@ -153,7 +153,7 @@ export default function ExpenseForm({
             placeholder="20"
           />
         </Field>
-        <Field label="Montant TVA">
+        <Field label="VAT amount">
           <input
             type="number"
             inputMode="decimal"
@@ -167,13 +167,13 @@ export default function ExpenseForm({
         </Field>
       </div>
 
-      <Field label="Moyen de paiement">
+      <Field label="Payment method">
         <select
           className={inputClass}
           value={paymentMethod}
           onChange={(e) => setPaymentMethod(e.target.value)}
         >
-          <option value="">— Non précisé —</option>
+          <option value="">— Not specified —</option>
           {PAYMENT_METHODS.map((p) => (
             <option key={p} value={p}>
               {p}
@@ -182,13 +182,13 @@ export default function ExpenseForm({
         </select>
       </Field>
 
-      <Field label="Note (optionnel)">
+      <Field label="Note (optional)">
         <textarea
           className={inputClass + ' resize-none'}
           rows={2}
           value={note}
           onChange={(e) => setNote(e.target.value)}
-          placeholder="Ex: Déjeuner client"
+          placeholder="e.g. Client lunch"
         />
       </Field>
 
@@ -206,7 +206,7 @@ export default function ExpenseForm({
               isSubmitting ? 'opacity-60' : ''
             }`}
           >
-            Annuler
+            Cancel
           </button>
         )}
         <button

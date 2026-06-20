@@ -28,7 +28,7 @@ export default function DonutChart({
   const gap = multi ? gapDegrees : 0
 
   const segments = []
-  let cursor = 0 // angle cumulé en degrés
+  let cursor = 0 // cumulative angle in degrees
   for (const d of data) {
     if (!(d.value > 0)) continue
     const sweep = (d.value / total) * 360
@@ -38,7 +38,7 @@ export default function DonutChart({
       key: d.key,
       color: d.color,
       arc,
-      // -90° pour démarrer en haut, +gap/2 pour centrer l'intervalle.
+      // -90° to start at the top, +gap/2 to center the gap.
       rotation: cursor + gap / 2 - 90,
     })
     cursor += sweep
@@ -52,7 +52,7 @@ export default function DonutChart({
         height={size}
         className="block text-gray-100 dark:text-white/10"
       >
-        {/* Piste de fond subtile (s'adapte au thème via currentColor) */}
+        {/* Subtle background track (adapts to the theme via currentColor) */}
         <circle
           cx="50"
           cy="50"

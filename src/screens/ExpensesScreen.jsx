@@ -28,14 +28,14 @@ export default function ExpensesScreen({ onOpen, onGoSettings }) {
 
   return (
     <div className="min-h-full overflow-x-hidden">
-      {/* En-tête */}
+      {/* Header */}
       <header className="px-5 pt-6 pb-4 bg-gradient-to-b from-indigo-600 to-indigo-500 text-white rounded-b-3xl">
-        <p className="text-indigo-100 text-sm">Mes dépenses</p>
+        <p className="text-indigo-100 text-sm">My expenses</p>
         <h1 className="text-2xl font-bold">Spend Manager</h1>
 
         <div className="mt-4 flex flex-wrap gap-2">
           {totalsByCurrency.length === 0 ? (
-            <span className="text-indigo-100 text-sm">Aucune dépense enregistrée</span>
+            <span className="text-indigo-100 text-sm">No expenses recorded</span>
           ) : (
             totalsByCurrency.map(([currency, total]) => (
               <div
@@ -50,7 +50,7 @@ export default function ExpensesScreen({ onOpen, onGoSettings }) {
         </div>
       </header>
 
-      {/* Bannière clé API manquante */}
+      {/* Missing API key banner */}
       {!settings.apiKey && (
         <button
           type="button"
@@ -59,28 +59,28 @@ export default function ExpensesScreen({ onOpen, onGoSettings }) {
         >
           <KeyRound className="text-amber-500 shrink-0 dark:text-amber-400" size={20} />
           <span className="min-w-0 break-words text-sm text-amber-800 dark:text-amber-200">
-            Ajoute ta clé API Google dans les Réglages pour activer l'analyse
-            automatique des tickets.
+            Add your Google API key in Settings to enable automatic receipt
+            scanning.
           </span>
         </button>
       )}
 
-      {/* Liste */}
+      {/* List */}
       <div className="px-4 py-4 pb-8">
         {loading ? (
-          <p className="text-center text-gray-400 mt-10 dark:text-gray-500">Chargement…</p>
+          <p className="text-center text-gray-400 mt-10 dark:text-gray-500">Loading…</p>
         ) : expenses.length === 0 ? (
           <div className="text-center mt-12 px-6">
             <div className="mx-auto h-16 w-16 rounded-2xl bg-indigo-50 flex items-center justify-center dark:bg-indigo-950/50">
               <ScanLine className="text-indigo-500 dark:text-indigo-400" size={30} />
             </div>
             <h2 className="mt-4 font-semibold text-gray-800 dark:text-gray-100">
-              Aucune dépense pour l'instant
+              No expenses yet
             </h2>
             <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">
-              Touche le bouton{' '}
-              <span className="font-semibold text-indigo-600 dark:text-indigo-400">Ajouter</span> en
-              bas pour scanner ton premier ticket.
+              Tap the{' '}
+              <span className="font-semibold text-indigo-600 dark:text-indigo-400">Add</span>{' '}
+              button at the bottom to scan your first receipt.
             </p>
           </div>
         ) : (
