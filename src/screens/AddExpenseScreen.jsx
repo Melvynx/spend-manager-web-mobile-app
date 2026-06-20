@@ -21,7 +21,7 @@ export default function AddExpenseScreen({ onClose, onGoSettings }) {
   const [saveError, setSaveError] = useState(null)
   const [saving, setSaving] = useState(false)
 
-  // Libère l'URL de prévisualisation quand l'écran se ferme
+  // Releases the preview URL when the screen closes
   useEffect(() => {
     return () => {
       if (imageUrl) URL.revokeObjectURL(imageUrl)
@@ -36,7 +36,7 @@ export default function AddExpenseScreen({ onClose, onGoSettings }) {
       currency: settings.defaultCurrency || 'EUR',
       vatRate: '',
       vatAmount: '',
-      category: settings.categories[0] || 'Divers',
+      category: settings.categories[0] || 'Other',
       paymentMethod: '',
       note: '',
     }
@@ -44,21 +44,21 @@ export default function AddExpenseScreen({ onClose, onGoSettings }) {
 
   function mapResult(r) {
     return {
-      shop: r.magasin || '',
+      shop: r.shop || '',
       date: r.date || todayISO(),
-      amount: r.montant != null ? r.montant : '',
-      currency: (r.devise || settings.defaultCurrency || 'EUR').toUpperCase(),
-      vatRate: r.tauxTva ? r.tauxTva : '',
-      vatAmount: r.montantTva ? r.montantTva : '',
-      category: r.categorie || settings.categories[0] || 'Divers',
-      paymentMethod: r.moyenPaiement || '',
+      amount: r.amount != null ? r.amount : '',
+      currency: (r.currency || settings.defaultCurrency || 'EUR').toUpperCase(),
+      vatRate: r.vatRate ? r.vatRate : '',
+      vatAmount: r.vatAmount ? r.vatAmount : '',
+      category: r.category || settings.categories[0] || 'Other',
+      paymentMethod: r.paymentMethod || '',
       note: r.note || '',
     }
   }
 
   async function handleFile(e) {
     const file = e.target.files?.[0]
-    e.target.value = '' // permet de re-sélectionner le même fichier
+    e.target.value = '' // allows re-selecting the same file
     if (!file) return
     setSaveError(null)
 
@@ -72,7 +72,7 @@ export default function AddExpenseScreen({ onClose, onGoSettings }) {
     setImageBlob(blob)
     setImageUrl(url)
 
-    // Pas de clé API : on passe directement à la saisie manuelle
+    // No API key: go straight to manual entry
     if (!settings.apiKey) {
       setAiError(geminiErrorMessage(new Error('NO_API_KEY')))
       setInitial(emptyInitial())
@@ -126,7 +126,7 @@ export default function AddExpenseScreen({ onClose, onGoSettings }) {
       onClose()
     } catch {
       setSaveError(
-        "Impossible d'enregistrer cette dépense. Vérifie l'espace disponible sur ton appareil, puis réessaie."
+        "Couldn't save this expense. Check the available space on your device, then try again."
       )
       setSaving(false)
     }
@@ -134,10 +134,10 @@ export default function AddExpenseScreen({ onClose, onGoSettings }) {
 
   const title =
     step === 'form'
-      ? 'Vérifier la dépense'
+      ? 'Review the expense'
       : step === 'analyzing'
-        ? 'Analyse en cours'
-        : 'Nouvelle dépense'
+        ? 'Analyzing'
+        : 'New expense'
 
   return (
     <div
@@ -150,7 +150,7 @@ export default function AddExpenseScreen({ onClose, onGoSettings }) {
         type="button"
         onClick={onClose}
         className="absolute inset-0 bg-gray-950/20 backdrop-blur-[10px] animate-fade-in dark:bg-black/50"
-        aria-label="Fermer"
+        aria-label="Close"
       />
 
       <section
@@ -178,7 +178,7 @@ export default function AddExpenseScreen({ onClose, onGoSettings }) {
               type="button"
               onClick={onClose}
               className="flex h-10 w-10 items-center justify-center rounded-full bg-gray-100 text-gray-500 active:scale-95 transition dark:bg-gray-800 dark:text-gray-400"
-              aria-label="Fermer"
+              aria-label="Close"
             >
               <X size={20} />
             </button>
@@ -197,7 +197,7 @@ export default function AddExpenseScreen({ onClose, onGoSettings }) {
         <div
           className="min-w-0 overflow-y-auto overflow-x-hidden no-scrollbar px-4 pb-[calc(1.25rem+env(safe-area-inset-bottom))]"
         >
-          {/* Étape 1 : choix */}
+          {/* Step 1: choose */}
           {step === 'choose' && (
             <div className="min-w-0 flex flex-col gap-3 pb-1 pt-3">
               <button
@@ -208,9 +208,9 @@ export default function AddExpenseScreen({ onClose, onGoSettings }) {
                 <span className="flex h-14 w-14 items-center justify-center rounded-2xl bg-white/16 ring-1 ring-white/18">
                   <Camera size={32} strokeWidth={2.2} />
                 </span>
-                <span className="text-[19px] font-semibold">Prendre une photo</span>
+                <span className="text-[19px] font-semibold">Take a photo</span>
                 <span className="-mt-1 text-center text-sm leading-5 text-indigo-100">
-                  Scanner un ticket ou une facture
+                  Scan a receipt or invoice
                 </span>
               </button>
 
@@ -220,7 +220,7 @@ export default function AddExpenseScreen({ onClose, onGoSettings }) {
                 className="flex w-full min-w-0 items-center justify-center gap-2 rounded-2xl border border-gray-200 bg-white py-4 font-semibold text-gray-700 shadow-sm active:scale-[0.985] transition dark:border-gray-700 dark:bg-gray-800 dark:text-gray-200"
               >
                 <PencilLine size={20} />
-                Saisir à la main
+                Enter manually
               </button>
 
               {!settings.apiKey && (
@@ -229,20 +229,20 @@ export default function AddExpenseScreen({ onClose, onGoSettings }) {
                   onClick={onGoSettings}
                   className="w-full min-w-0 rounded-2xl border border-amber-200 bg-amber-50 px-4 py-3 text-center text-sm text-amber-800 active:scale-[0.985] transition dark:border-amber-900 dark:bg-amber-950/30 dark:text-amber-200"
                 >
-                  Ajoute ta clé API dans Réglages pour que l'IA remplisse le
-                  formulaire automatiquement.
+                  Add your API key in Settings so the AI fills in the form
+                  automatically.
                 </button>
               )}
             </div>
           )}
 
-          {/* Étape 2 : analyse */}
+          {/* Step 2: analysis */}
           {step === 'analyzing' && (
             <div className="min-w-0 flex min-h-[360px] flex-col items-center justify-center px-5 pb-8 text-center">
               {imageUrl && (
                 <img
                   src={imageUrl}
-                  alt="Ticket"
+                  alt="Receipt"
                   className="mb-6 max-h-48 rounded-2xl bg-white object-contain shadow-md"
                 />
               )}
@@ -251,21 +251,21 @@ export default function AddExpenseScreen({ onClose, onGoSettings }) {
                 <Sparkles size={20} />
               </div>
               <p className="mt-3 font-semibold text-gray-800 dark:text-gray-100">
-                L'IA lit ton ticket…
+                The AI is reading your receipt…
               </p>
               <p className="text-sm text-gray-500 dark:text-gray-400">
-                Détection du montant, de la TVA, du magasin…
+                Detecting the amount, VAT, store…
               </p>
             </div>
           )}
 
-          {/* Étape 3 : formulaire de vérification */}
+          {/* Step 3: verification form */}
           {step === 'form' && initial && (
             <div className="min-w-0 max-w-full pt-3">
               {imageUrl && (
                 <img
                   src={imageUrl}
-                  alt="Ticket"
+                  alt="Receipt"
                   className="mb-4 max-h-52 w-full rounded-2xl bg-white object-contain shadow-sm"
                 />
               )}
@@ -281,8 +281,8 @@ export default function AddExpenseScreen({ onClose, onGoSettings }) {
                 <div className="mb-4 flex min-w-0 gap-2 rounded-xl border border-indigo-100 bg-indigo-50 px-3 py-2.5 dark:border-indigo-900 dark:bg-indigo-950/40">
                   <Sparkles className="shrink-0 text-indigo-500 dark:text-indigo-400" size={18} />
                   <p className="min-w-0 break-words text-sm text-indigo-800 dark:text-indigo-200">
-                    Informations détectées par l'IA. Vérifie et corrige si
-                    besoin avant d'enregistrer.
+                    Information detected by the AI. Check and correct it if
+                    needed before saving.
                   </p>
                 </div>
               )}
@@ -299,7 +299,7 @@ export default function AddExpenseScreen({ onClose, onGoSettings }) {
                 categories={settings.categories}
                 onSubmit={handleSubmit}
                 isSubmitting={saving}
-                submitLabel={saving ? 'Enregistrement...' : 'Enregistrer'}
+                submitLabel={saving ? 'Saving...' : 'Save'}
               />
             </div>
           )}

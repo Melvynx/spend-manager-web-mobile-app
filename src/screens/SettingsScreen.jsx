@@ -20,9 +20,9 @@ const labelClass =
   'block text-[13px] font-medium text-gray-500 mb-1 break-words dark:text-gray-400'
 
 const THEME_OPTIONS = [
-  { value: 'light', label: 'Clair', icon: Sun },
-  { value: 'dark', label: 'Sombre', icon: Moon },
-  { value: 'system', label: 'Système', icon: Monitor },
+  { value: 'light', label: 'Light', icon: Sun },
+  { value: 'dark', label: 'Dark', icon: Moon },
+  { value: 'system', label: 'System', icon: Monitor },
 ]
 
 export default function SettingsScreen() {
@@ -49,7 +49,7 @@ export default function SettingsScreen() {
 
   function handleClearAll() {
     const ok = window.confirm(
-      `Supprimer définitivement les ${expenses.length} dépense(s) et leurs photos ? Cette action est irréversible.`
+      `Permanently delete the ${expenses.length} expense(s) and their photos? This action cannot be undone.`
     )
     if (ok) clearAllData()
   }
@@ -58,28 +58,27 @@ export default function SettingsScreen() {
     <div className="min-h-full overflow-x-hidden">
       <header className="px-5 pt-6 pb-4">
         <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-50">
-          Réglages
+          Settings
         </h1>
       </header>
 
       <div className="px-4 pb-8 space-y-5">
-        {/* Avertissement sécurité */}
+        {/* Security warning */}
         <div className="min-w-0 flex gap-3 bg-amber-50 border border-amber-200 rounded-2xl px-4 py-3 dark:bg-amber-950/30 dark:border-amber-900">
           <AlertTriangle
             className="text-amber-500 shrink-0 dark:text-amber-400"
             size={20}
           />
           <p className="min-w-0 break-words text-sm text-amber-800 dark:text-amber-200">
-            Ta clé API est stockée uniquement sur cet appareil. Ne publie pas
-            cette application en ligne avec ta clé : elle serait visible par
-            tout le monde.
+            Your API key is stored only on this device. Don't publish this app
+            online with your key: it would be visible to everyone.
           </p>
         </div>
 
-        {/* Apparence */}
+        {/* Appearance */}
         <section className="min-w-0 bg-white rounded-2xl p-4 shadow-sm dark:bg-gray-900">
           <h3 className="font-semibold text-gray-800 mb-3 dark:text-gray-100">
-            Apparence
+            Appearance
           </h3>
 
           <div className="grid grid-cols-3 gap-2">
@@ -105,25 +104,25 @@ export default function SettingsScreen() {
           </div>
 
           <p className="mt-2 text-xs text-gray-400 dark:text-gray-500">
-            « Système » suit le réglage clair / sombre de ton téléphone.
+            "System" follows your phone's light / dark setting.
           </p>
         </section>
 
-        {/* Intelligence artificielle */}
+        {/* Artificial intelligence */}
         <section className="min-w-0 bg-white rounded-2xl p-4 shadow-sm space-y-4 dark:bg-gray-900">
           <h3 className="font-semibold text-gray-800 dark:text-gray-100">
-            Intelligence artificielle
+            Artificial intelligence
           </h3>
 
           <div>
-            <label className={labelClass}>Clé API Google (Gemini)</label>
+            <label className={labelClass}>Google API key (Gemini)</label>
             <div className="relative">
               <input
                 type={showKey ? 'text' : 'password'}
                 className={inputClass + ' pr-11'}
                 value={settings.apiKey}
                 onChange={(e) => updateSettings({ apiKey: e.target.value })}
-                placeholder="Colle ta clé ici"
+                placeholder="Paste your key here"
                 autoComplete="off"
                 spellCheck={false}
               />
@@ -131,7 +130,7 @@ export default function SettingsScreen() {
                 type="button"
                 onClick={() => setShowKey((v) => !v)}
                 className="absolute right-2 top-1/2 -translate-y-1/2 p-2 text-gray-400 dark:text-gray-500"
-                aria-label={showKey ? 'Masquer la clé' : 'Afficher la clé'}
+                aria-label={showKey ? 'Hide key' : 'Show key'}
               >
                 {showKey ? <EyeOff size={18} /> : <Eye size={18} />}
               </button>
@@ -143,14 +142,14 @@ export default function SettingsScreen() {
               className="mt-1.5 inline-flex max-w-full min-w-0 items-center gap-1 text-xs text-indigo-600 font-medium dark:text-indigo-400"
             >
               <span className="min-w-0 break-words">
-                Obtenir une clé gratuite sur Google AI Studio
+                Get a free key on Google AI Studio
               </span>
               <ExternalLink className="shrink-0" size={12} />
             </a>
           </div>
 
           <div>
-            <label className={labelClass}>Modèle</label>
+            <label className={labelClass}>Model</label>
             <input
               className={inputClass}
               value={settings.model}
@@ -159,13 +158,13 @@ export default function SettingsScreen() {
               spellCheck={false}
             />
             <p className="mt-1 text-xs text-gray-400 dark:text-gray-500">
-              Par défaut : gemini-3.1-flash-lite (rapide, économique, lit les
-              images). Tu peux mettre un autre modèle Gemini ici.
+              Default: gemini-3.1-flash-lite (fast, affordable, reads images).
+              You can set another Gemini model here.
             </p>
           </div>
 
           <div>
-            <label className={labelClass}>Devise par défaut</label>
+            <label className={labelClass}>Default currency</label>
             <input
               className={inputClass}
               value={settings.defaultCurrency}
@@ -180,10 +179,10 @@ export default function SettingsScreen() {
           </div>
         </section>
 
-        {/* Catégories */}
+        {/* Categories */}
         <section className="min-w-0 bg-white rounded-2xl p-4 shadow-sm dark:bg-gray-900">
           <h3 className="font-semibold text-gray-800 mb-3 dark:text-gray-100">
-            Catégories
+            Categories
           </h3>
 
           <div className="flex flex-wrap gap-2 mb-3">
@@ -197,7 +196,7 @@ export default function SettingsScreen() {
                 <button
                   type="button"
                   onClick={() => removeCategory(c)}
-                  aria-label={`Supprimer ${c}`}
+                  aria-label={`Remove ${c}`}
                   className="ml-0.5 shrink-0 opacity-60 hover:opacity-100"
                 >
                   <X size={14} />
@@ -206,7 +205,7 @@ export default function SettingsScreen() {
             ))}
             {settings.categories.length === 0 && (
               <span className="text-sm text-gray-400 dark:text-gray-500">
-                Aucune catégorie
+                No categories
               </span>
             )}
           </div>
@@ -222,26 +221,26 @@ export default function SettingsScreen() {
                   addCategory()
                 }
               }}
-              placeholder="Nouvelle catégorie"
+              placeholder="New category"
             />
             <button
               type="button"
               onClick={addCategory}
               className="shrink-0 rounded-xl bg-indigo-600 px-4 text-white active:scale-95 transition"
-              aria-label="Ajouter la catégorie"
+              aria-label="Add category"
             >
               <Plus size={20} />
             </button>
           </div>
         </section>
 
-        {/* Données */}
+        {/* Data */}
         <section className="min-w-0 bg-white rounded-2xl p-4 shadow-sm dark:bg-gray-900">
           <h3 className="font-semibold text-gray-800 mb-1 dark:text-gray-100">
-            Données
+            Data
           </h3>
           <p className="text-sm text-gray-500 mb-3 dark:text-gray-400">
-            {expenses.length} dépense(s) stockée(s) sur cet appareil.
+            {expenses.length} expense(s) stored on this device.
           </p>
           <button
             type="button"
@@ -250,12 +249,12 @@ export default function SettingsScreen() {
             className="w-full flex items-center justify-center gap-2 rounded-xl border border-red-200 bg-red-50 py-3 font-semibold text-red-600 disabled:opacity-40 active:scale-[0.98] transition dark:border-red-900 dark:bg-red-950/30 dark:text-red-400"
           >
             <Trash2 size={18} />
-            Effacer toutes les données
+            Clear all data
           </button>
         </section>
 
         <p className="text-center text-xs text-gray-400 pt-2 dark:text-gray-500">
-          Spend Manager · Données stockées localement
+          Spend Manager · Data stored locally
         </p>
       </div>
     </div>
