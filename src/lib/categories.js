@@ -10,6 +10,26 @@ export const DEFAULT_CATEGORIES = [
   'Other',
 ]
 
+// Maps the old French default category names to their English equivalents,
+// so expenses and settings saved before the English migration keep a known
+// category (emoji, color, charts). Custom categories are left untouched.
+const LEGACY_CATEGORY_MAP = {
+  Repas: 'Meals',
+  Transport: 'Transport',
+  Hébergement: 'Lodging',
+  Carburant: 'Fuel',
+  Fournitures: 'Supplies',
+  Télécom: 'Telecom',
+  Matériel: 'Equipment',
+  Divers: 'Other',
+}
+
+// Returns the English category name for a known legacy French name,
+// or the name unchanged if it isn't a legacy default.
+export function migrateCategoryName(name) {
+  return LEGACY_CATEGORY_MAP[name] || name
+}
+
 // Emoji + display color for each known category.
 // `hex` is the solid color used by charts (donut, bars).
 const CATEGORY_META = {

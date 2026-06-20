@@ -5,7 +5,7 @@ import {
   useState,
   useCallback,
 } from 'react'
-import { DEFAULT_CATEGORIES } from '../lib/categories.js'
+import { DEFAULT_CATEGORIES, migrateCategoryName } from '../lib/categories.js'
 import * as db from '../lib/db.js'
 
 const AppContext = createContext(null)
@@ -26,7 +26,7 @@ function loadSettings() {
         theme: THEMES.includes(parsed.theme) ? parsed.theme : 'system',
         categories:
           Array.isArray(parsed.categories) && parsed.categories.length
-            ? parsed.categories
+            ? [...new Set(parsed.categories.map(migrateCategoryName))]
             : DEFAULT_CATEGORIES,
       }
     }
@@ -50,7 +50,16 @@ export function AppProvider({ children }) {
 
   useEffect(() => {
     db.getAllExpenses().then((list) => {
-      setExpenses(list)
+      // One-time migration: rewrite legacy French category names to English so
+      // expenses saved before the translation show a known English category.
+      const migrated = list.map((e) => {
+        const category = migrateCategoryName(e.category)
+        if (category === e.category) return e
+        const updated = { ...e, category }
+        db.saveExpense(updated).catch(() => {})
+        return updated
+      })
+      setExpenses(migrated)
       setLoading(false)
     })
     db.getAllAnalyses().then(setAnalyses)
